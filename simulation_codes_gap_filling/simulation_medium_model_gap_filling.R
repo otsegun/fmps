@@ -827,7 +827,7 @@ run_simulation3 <- function(no_of_basis = 10,
                                 "_dist_", distance_metric,
                                 "_nng_", no_of_ngbs,
                                 "_missing_", missing_mode,
-                                "inner_outward",
+                                "_inner_outward",
                                 ".RData"))
   return(final_res)
 }
@@ -1012,5 +1012,22 @@ plot_rf_gap2(norm_train = norm_training_image,
              norm_simg = norm_sg_d3)
 dev.off()
 
+# inner outward filling
+load("sim_final_results/final_res__dist_d1_nng_5_missing_box_inner_outward.RData")
+load("sim_intermediate_data/sgti.RData")
+norm_training_image <- sqrt(rowSums(final_res$training$sim_data^2))
+norm_test_image <- sqrt(rowSums(final_res$simtest$sim_data^2))
+norm_test_image_missing <- norm_test_image
+norm_test_image_missing[final_res$missing_points]  <- NA
+norm_sg_d1_inner <- list()
+for (i in 1:4) {
+  norm_sg_d1_inner[[i]] <- sqrt(rowSums(final_res$results[[i]]$simmimage^2))
+}
 
+
+pdf("sim_d1_gap_box_inner_outward_filling.pdf", width = 9.5, height = 7)
+plot_rf_gap2(norm_train = norm_training_image,
+             norm_testim_missing = norm_test_image_missing, 
+             norm_simg = norm_sg_d1_inner)
+dev.off()
 
